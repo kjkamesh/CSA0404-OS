@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+#define MEMORY_SIZE 100
+#define NUM_PROCESSES 5
+
+typedef struct {
+    int id;
+    int size;
+} Process;
+
+void firstFit(int memory[], Process processes[]) {
+    for (int i = 0; i < NUM_PROCESSES; i++) {
+        int size = processes[i].size;
+        for (int j = 0; j < MEMORY_SIZE; j++) {
+            if (!memory[j]) {
+                int count = 0;
+                while (!memory[j + count] && count < size) {
+                    count++;
+                }
+                if (count == size) {
+                    for (int k = j; k < j + size; k++) {
+                        memory[k] = processes[i].id;
+                    }
+                    printf("Process %d allocated from %d to %d\n", processes[i].id, j, j + size - 1);
+                    break;
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int memory[MEMORY_SIZE] = {0};
+    Process processes[NUM_PROCESSES] = {{1, 10}, {2, 20}, {3, 30}, {4, 40}, {5, 50}};
+
+    firstFit(memory, processes);
+
+    return 0;
+}
