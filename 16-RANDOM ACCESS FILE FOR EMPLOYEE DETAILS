@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+struct Employee {int id; char name[50]; float salary;};
+
+int main() {
+    FILE *file = fopen("employee_data.dat", "ab+");
+    struct Employee emp;
+
+    printf("Enter employee details (ID, Name, Salary): ");
+    scanf("%d %s %f", &emp.id, emp.name, &emp.salary);
+
+    fseek(file, (emp.id - 1) * sizeof(emp), SEEK_SET);
+    fwrite(&emp, sizeof(emp), 1, file);
+
+    fclose(file);
+    return 0;
+}
