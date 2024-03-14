@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <string.h>
+
+#define MSG_SIZE 128
+
+struct message_buffer {
+    long message_type;
+    char message_text[MSG_SIZE];
+};
+
+int main() {
+    key_t key;
+    int message_queue_id;
+    struct message_buffer message;
+
+    // Generate a unique key
+    key = ftok("progfile", 65);
+
+    // Create a message queue
+    message_queue_id = msgget(key, 0666 | IPC_CREAT);
+
+    // Sender process
+    if (fork() == 0) {
+        message.message_type = 1;
+        strcpy(message.message_text, "Hello from the sender!");
+        msgsnd(message_queue_id, &message, sizeof(message), 0);
+        printf("Message sent: %s\n", message.message_text);
+        exit(0);
+    }
+
+    // Receiver process
+    else {
+        wait(NULL);
+        msgrcv(message_queue_id, &message, sizeof(message), 1, 0);
+        printf("Message received: %s\n", message.message_text);
+        // Destroy the message queue
+        msgctl(message_queue_id, IPC_RMID, NULL);
+        exit(0);
+    }
+
+    return 0;
+}
