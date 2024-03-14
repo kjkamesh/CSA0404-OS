@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FILENAME_LENGTH 100
+#define MAX_DIRECTORY_LENGTH 50
+#define MAX_FILES_PER_DIRECTORY 100
+
+typedef struct {
+    char filename[MAX_FILENAME_LENGTH];
+} File;
+
+typedef struct {
+    char directoryName[MAX_DIRECTORY_LENGTH];
+    File files[MAX_FILES_PER_DIRECTORY];
+    int fileCount;
+} Directory;
+
+Directory directories[MAX_FILES_PER_DIRECTORY];
+int directoryCount = 0;
+
+void createDirectory(char directoryName[]) {
+    strcpy(directories[directoryCount].directoryName, directoryName);
+    directories[directoryCount].fileCount = 0;
+    directoryCount++;
+}
+
+void addFileToDirectory(char directoryName[], char filename[]) {
+    int i;
+    for (i = 0; i < directoryCount; i++) {
+        if (strcmp(directories[i].directoryName, directoryName) == 0) {
+            strcpy(directories[i].files[directories[i].fileCount].filename, filename);
+            directories[i].fileCount++;
+            return;
+        }
+    }
+    printf("Directory not found.\n");
+}
+
+void displayDirectories() {
+    int i, j;
+    for (i = 0; i < directoryCount; i++) {
+        printf("Directory: %s\n", directories[i].directoryName);
+        printf("Files:\n");
+        for (j = 0; j < directories[i].fileCount; j++) {
+            printf("- %s\n", directories[i].files[j].filename);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    createDirectory("Directory1");
+    createDirectory("Directory2");
+
+    addFileToDirectory("Directory1", "file1.txt");
+    addFileToDirectory("Directory1", "file2.txt");
+    addFileToDirectory("Directory2", "file3.txt");
+
+    displayDirectories();
+
+    return 0;
+}
