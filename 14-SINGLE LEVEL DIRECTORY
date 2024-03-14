@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_FILENAME_LENGTH 100
+#define MAX_DIRECTORY_LENGTH 100
+
+int main() {
+    char filename[MAX_FILENAME_LENGTH];
+    char directory[MAX_DIRECTORY_LENGTH];
+    char command[MAX_FILENAME_LENGTH + MAX_DIRECTORY_LENGTH + 15]; // command length + 15 for extra characters
+
+    printf("Enter the name of the file: ");
+    scanf("%s", filename);
+
+    printf("Enter the name of the directory: ");
+    scanf("%s", directory);
+
+    // Construct the command to move the file to the specified directory
+    sprintf(command, "mv %s %s/", filename, directory);
+
+    // Execute the command
+    int status = system(command);
+
+    if (status == 0) {
+        printf("File moved successfully.\n");
+    } else {
+        printf("Error occurred while moving the file.\n");
+    }
+
+    return 0;
+}
