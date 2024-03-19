@@ -1,0 +1,60 @@
+#include <stdio.h>
+
+#define MAX_FRAMES 3 // Maximum number of frames in memory
+
+void fifo(int pages[], int n, int capacity) {
+    int frame[MAX_FRAMES], frameCount = 0, pageFaults = 0;
+    int i, j, k;
+
+    // Initialize frame array to -1 (indicating empty frame)
+    for (i = 0; i < MAX_FRAMES; i++)
+        frame[i] = -1;
+
+    // Loop through each page
+    for (i = 0; i < n; i++) {
+        // Check if the page is already in memory
+        int inMemory = 0;
+        for (j = 0; j < capacity; j++) {
+            if (frame[j] == pages[i]) {
+                inMemory = 1;
+                break;
+            }
+        }
+
+        // If page is not in memory, perform page replacement
+        if (!inMemory) {
+            if (frameCount < capacity) {
+                // If there's still space in memory, add the page to a new frame
+                frame[frameCount++] = pages[i];
+            } else {
+                // If all frames are occupied, replace the oldest page (FIFO)
+                for (j = 0; j < capacity - 1; j++)
+                    frame[j] = frame[j + 1];
+                frame[capacity - 1] = pages[i];
+            }
+            pageFaults++;
+        }
+
+        // Print the current state of memory after each page access
+        printf("Page %d -> ", pages[i]);
+        for (k = 0; k < capacity; k++) {
+            if (frame[k] != -1)
+                printf("%d ", frame[k]);
+            else
+                printf("- ");
+        }
+        printf("\n");
+    }
+    printf("Total Page Faults: %d\n", pageFaults);
+}
+
+int main() {
+    int pages[] = {1, 3, 0, 3, 5, 6, 3};
+    int n = sizeof(pages) / sizeof(pages[0]);
+    int capacity = 3; // Number of frames in memory
+
+    printf("Simulating FIFO Paging:\n");
+    fifo(pages, n, capacity);
+
+    return 0;
+}
