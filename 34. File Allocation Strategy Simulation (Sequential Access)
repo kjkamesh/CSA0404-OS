@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+#define MAX_RECORDS 100
+
+void sequentialAccess(int records[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Reading record %d: %d\n", i + 1, records[i]);
+    }
+}
+
+int main() {
+    int records[MAX_RECORDS] = {1, 2, 3, 4, 5};
+    int n = 5;
+    sequentialAccess(records, n);
+    return 0;
+}
