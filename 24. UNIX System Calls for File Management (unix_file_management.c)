@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *file;
+    char filename[] = "test.txt";
+    char content[] = "This is a test file.";
+    file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    fprintf(file, "%s\n", content);
+    fclose(file);
+    file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    char line[100];
+    while (fgets(line, sizeof(line), file)) {
+        printf("%s", line);
+    }
+    fclose(file);
+
+    return 0;
+}
