@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+#define MAX_BLOCKS 100
+
+void indexBlockAccess(int blocks[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Reading block %d: %d\n", i + 1, blocks[i]);
+    }
+}
+
+int main() {
+    int blocks[MAX_BLOCKS] = {101, 102, 103, 104, 105};
+    int n = 5;
+    indexBlockAccess(blocks, n);
+    return 0;
+}
