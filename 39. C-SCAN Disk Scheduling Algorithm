@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+void C_SCAN(int requests[], int n, int head) {
+    printf("Sequence of requests: ");
+    int start = 0, end = 199; // Cylinder range
+    int i, j;
+    for (i = 0; i < n; i++) {
+        for (j = i + 1; j < n; j++) {
+            if (requests[i] > requests[j]) {
+                int temp = requests[i];
+                requests[i] = requests[j];
+                requests[j] = temp;
+            }
+        }
+    }
+    
+    for (i = head; i >= start; i--) {
+        printf("%d ", requests[i]);
+    }
+    printf("%d ", start);
+    printf("%d ", end);
+  
+    for (i = n - 1; i > head; i--) {
+        printf("%d ", requests[i]);
+    }
+    
+    printf("\n");
+}
+
+int main() {
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int n = sizeof(requests) / sizeof(requests[0]);
+    int head = 53; // Head position
+    C_SCAN(requests, n, head);
+    return 0;
+}
