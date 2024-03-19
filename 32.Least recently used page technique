@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_FRAMES 3 // Maximum number of frames in memory
+
+typedef struct {
+    int page;
+    int time;
+} Frame;
+
+void lru(int pages[], int n, int capacity) {
+    Frame frame[MAX_FRAMES];
+    int pageFaults = 0;
+    int i, j, k;
+
+    // Initialize frame array to -1 (indicating empty frame)
+    for (i = 0; i < MAX_FRAMES; i++) {
+        frame[i].page = -1;
+        frame[i].time = 0;
+    }
+
+    // Loop through each page
+    for (i = 0; i < n; i++) {
+        // Check if the page is already in memory
+        int inMemory = 0;
+        for (j = 0; j < capacity; j++) {
+            if (frame[j].page == pages[i]) {
+                inMemory = 1;
+                frame[j].time = i;
+                break;
+            }
+        }
+
+        // If page is not in memory, perform page replacement
+        if (!inMemory) {
+            int leastUsed = 0;
+            // Find the least recently used page in memory
+            for (j = 1; j < capacity; j++) {
+                if (frame[j].time < frame[leastUsed].time)
+                    leastUsed = j;
+            }
+            // Replace the least recently used page with the current page
+            frame[leastUsed].page = pages[i];
+            frame[leastUsed].time = i;
+            pageFaults++;
+        }
+
+        // Print the current state of memory after each page access
+        printf("Page %d -> ", pages[i]);
+        for (k = 0; k < capacity; k++) {
+            if (frame[k].page != -1)
+                printf("%d ", frame[k].page);
+            else
+                printf("- ");
+        }
+        printf("\n");
+    }
+    printf("Total Page Faults: %d\n", pageFaults);
+}
+
+int main() {
+    int pages[] = {7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2};
+    int n = sizeof(pages) / sizeof(pages[0]);
+    int capacity = 3; // Number of frames in memory
+
+    printf("Simulating LRU Paging:\n");
+    lru(pages, n, capacity);
+
+    return 0;
+}
