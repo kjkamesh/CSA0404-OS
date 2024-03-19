@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+void displayPermissions(const char *filename) {
+   
+    char owner_perms[] = "rwx"; 
+    char group_perms[] = "r--"; 
+    char others_perms[] = "---"; 
+    
+    printf("File: %s\n", filename);
+    printf("Owner permissions: %s\n", owner_perms);
+    printf("Group permissions: %s\n", group_perms);
+    printf("Others permissions: %s\n", others_perms);
+}
+
+int main() {
+    const char *filename = "example.txt";
+    displayPermissions(filename);
+    return 0;
+}
