@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+typedef struct Block {
+    int data;
+    struct Block* next;
+} Block;
+
+void linkedAllocation(Block* start) {
+    Block* current = start;
+    int blockNumber = 1;
+    while (current != NULL) {
+        printf("Block %d: %d\n", blockNumber++, current->data);
+        current = current->next;
+    }
+}
+
+int main() {
+    Block block1, block2, block3;
+    block1.data = 101;
+    block2.data = 102;
+    block3.data = 103;
+    block1.next = &block2;
+    block2.next = &block3;
+    block3.next = NULL;
+    
+    linkedAllocation(&block1);
+    return 0;
+}
