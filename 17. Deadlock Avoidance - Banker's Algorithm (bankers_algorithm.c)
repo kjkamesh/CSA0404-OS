@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+#define P 5
+#define R 3 
+
+void calculateNeed(int need[P][R], int max[P][R], int allot[P][R], int n) {
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < R; j++)
+            need[i][j] = max[i][j] - allot[i][j];
+}
+
+int isSafe(int processes[], int avail[], int max[][R], int allot[][R], int n) {
+    int need[n][R];
+    calculateNeed(need, max, allot, n);
+    int finish[n];
+    for (int i = 0; i < n; i++)
+        finish[i] = 0;
+    int work[R];
+    for (int i = 0; i < R; i++)
+        work[i] = avail[i];
+    int count = 0;
+    while (count < n) {
+        int found = 0;
+        for (int p = 0; p < n; p++) {
+            if (finish[p] == 0) {
+                int j;
+                for (j = 0; j < R; j++)
+                    if (need[p][j] > work[j])
+                        break;
+                if (j == R) {
+                    for (int k = 0; k < R; k++)
+                        work[k] += allot[p][k];
+                    finish[p] = 1;
+                    found = 1;
+                    count++;
+                }
+            }
+        }
+        if (found == 0)
+            return 0;
+    }
+    return 1; // System is in safe state
+}
+
+int main() {
+    int processes[] = {0, 1, 2, 3, 4};
+    int avail[] = {3, 3, 2};
+    int max[][R] = {{7, 5, 3}, {3, 2, 2}, {9, 0, 2}, {2, 2, 2}, {4, 3, 3}};
+    int allot[][R] = {{0, 1, 0}, {2, 0, 0}, {3, 0, 2}, {2, 1, 1}, {0, 0, 2}};
+    int n = sizeof(processes)/sizeof(processes[0]);
+    if (isSafe(processes, avail, max, allot, n))
+        printf("System is in safe state.\n");
+    else
+        printf("System is not in safe state.\n");
+    return 0;
+}
